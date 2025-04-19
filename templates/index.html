@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Resizer & Compressor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
+            <h1>Image Resizer & Compressor</h1>
+        </header>
+        
+        <main>
+            <div class="upload-container">
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <div class="file-input-container">
+                        <input type="file" id="imageInput" name="image" accept="image/*" required>
+                        <label for="imageInput" class="file-input-label">
+                            <span>Escolha uma imagem</span>
+                            <span class="file-name"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="settings-container">
+                        <div class="setting-group">
+                            <label for="width">Largura (px):</label>
+                            <input type="number" id="width" name="width" min="1" placeholder="Original">
+                        </div>
+                        
+                        <div class="setting-group">
+                            <label for="height">Altura (px):</label>
+                            <input type="number" id="height" name="height" min="1" placeholder="Original">
+                        </div>
+                        
+                        <div class="setting-group">
+                            <label for="quality">Qualidade (%):</label>
+                            <input type="range" id="quality" name="quality" min="1" max="100" value="85">
+                            <span class="quality-value">85%</span>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="process-button">Processar Imagem</button>
+                </form>
+            </div>
+            
+            <div class="preview-container">
+                <img id="preview" src="" alt="Preview" style="display: none;">
+            </div>
+        </main>
+        
+        <footer>
+            <p>Desenvolvido por <a href="https://github.com/runawaydevil" target="_blank">Pablo Murad (runawaydevil)</a> © 2025</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html> 
