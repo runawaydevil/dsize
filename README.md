@@ -1,5 +1,13 @@
 # DSIZE - Image Resizer & Compressor
 
+[![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/downloads/)
+[![Flask](https://img.shields.io/badge/flask-3.0.2-green)](https://flask.palletsprojects.com/)
+[![License](https://img.shields.io/badge/license-MIT-yellow)](LICENSE)
+[![Status](https://img.shields.io/badge/status-active-success)](https://github.com/runawaydevil/dsize)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/runawaydevil/dsize/graphs/commit-activity)
+[![GitHub Stars](https://img.shields.io/github/stars/runawaydevil/dsize?style=social)](https://github.com/runawaydevil/dsize/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/runawaydevil/dsize?style=social)](https://github.com/runawaydevil/dsize/network/members)
+
 Um aplicativo web moderno para redimensionar e comprimir imagens, desenvolvido por Pablo Murad (runawaydevil).
 
 ## 🚀 Funcionalidades
