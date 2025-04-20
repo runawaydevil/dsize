@@ -25,6 +25,31 @@
                         </label>
                     </div>
                     
+                    <div class="image-info" style="display: none;">
+                        <h3>Informações da Imagem</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Largura Original:</span>
+                                <span class="info-value" id="originalWidth">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Altura Original:</span>
+                                <span class="info-value" id="originalHeight">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Tamanho do Arquivo:</span>
+                                <span class="info-value" id="fileSize">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="suggestions-container" style="display: none;">
+                        <h3>Sugestões de Tamanho</h3>
+                        <div class="suggestions-grid" id="suggestionsGrid">
+                            <!-- Sugestões serão adicionadas aqui via JavaScript -->
+                        </div>
+                    </div>
+                    
                     <div class="settings-container">
                         <div class="setting-group">
                             <label for="width">Largura (px):</label>

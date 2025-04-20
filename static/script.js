@@ -7,6 +7,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('uploadForm');
     const widthInput = document.getElementById('width');
     const heightInput = document.getElementById('height');
+    const imageInfo = document.querySelector('.image-info');
+    const suggestionsContainer = document.querySelector('.suggestions-container');
+    const suggestionsGrid = document.getElementById('suggestionsGrid');
+    const originalWidth = document.getElementById('originalWidth');
+    const originalHeight = document.getElementById('originalHeight');
+    const fileSize = document.getElementById('fileSize');
 
     // Atualizar valor da qualidade
     qualitySlider.addEventListener('input', () => {
@@ -14,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Preview da imagem
-    imageInput.addEventListener('change', (e) => {
+    imageInput.addEventListener('change', async (e) => {
         const file = e.target.files[0];
         if (file) {
             fileName.textContent = file.name;
@@ -25,8 +31,81 @@ document.addEventListener('DOMContentLoaded', () => {
                 preview.style.display = 'block';
             };
             reader.readAsDataURL(file);
+
+            // Analisar imagem
+            await analyzeImage(file);
         }
     });
+
+    // Analisar imagem
+    async function analyzeImage(file) {
+        const formData = new FormData();
+        formData.append('image', file);
+
+        try {
+            const response = await fetch('/analyze', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                
+                // Mostrar informações
+                originalWidth.textContent = `${data.width}px`;
+                originalHeight.textContent = `${data.height}px`;
+                fileSize.textContent = formatFileSize(data.file_size);
+                imageInfo.style.display = 'block';
+
+                // Mostrar sugestões
+                showSuggestions(data.suggestions);
+                suggestionsContainer.style.display = 'block';
+            } else {
+                throw new Error('Erro ao analisar imagem');
+            }
+        } catch (error) {
+            console.error('Erro:', error);
+        }
+    }
+
+    // Mostrar sugestões
+    function showSuggestions(suggestions) {
+        suggestionsGrid.innerHTML = '';
+        
+        suggestions.forEach(suggestion => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'suggestion-button';
+            button.textContent = suggestion.label;
+            
+            button.addEventListener('click', () => {
+                // Remover classe active de todos os botões
+                document.querySelectorAll('.suggestion-button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // Adicionar classe active ao botão clicado
+                button.classList.add('active');
+                
+                // Preencher campos de largura e altura
+                widthInput.value = suggestion.width;
+                heightInput.value = suggestion.height;
+            });
+            
+            suggestionsGrid.appendChild(button);
+        });
+    }
+
+    // Formatar tamanho do arquivo
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
 
     // Validação dos campos numéricos
     function validateNumberInput(input) {

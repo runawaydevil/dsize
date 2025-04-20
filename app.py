@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_file, after_this_request
+from flask import Flask, render_template, request, send_file, after_this_request, jsonify
 from PIL import Image
 import os
 import io
@@ -13,9 +13,65 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 if not os.path.exists(app.config['UPLOAD_FOLDER']):
     os.makedirs(app.config['UPLOAD_FOLDER'])
 
+def get_suggested_sizes(width, height):
+    """Retorna sugestões de tamanhos baseadas nas dimensões originais"""
+    suggestions = []
+    
+    # Sugestões comuns para web
+    web_sizes = [
+        (1920, 1080),  # Full HD
+        (1280, 720),   # HD
+        (800, 600),     # Padrão web
+        (640, 480),    # VGA
+        (320, 240)     # QVGA
+    ]
+    
+    # Calcular proporção original
+    original_ratio = width / height
+    
+    # Gerar sugestões mantendo a proporção
+    for target_width, target_height in web_sizes:
+        if target_width < width:  # Só sugere tamanhos menores
+            # Calcular altura mantendo a proporção
+            new_height = int(target_width / original_ratio)
+            suggestions.append({
+                'width': target_width,
+                'height': new_height,
+                'label': f'{target_width}x{new_height}'
+            })
+    
+    return suggestions
+
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/analyze', methods=['POST'])
+def analyze_image():
+    if 'image' not in request.files:
+        return jsonify({'error': 'Nenhuma imagem enviada'}), 400
+    
+    file = request.files['image']
+    if file.filename == '':
+        return jsonify({'error': 'Nenhuma imagem selecionada'}), 400
+    
+    try:
+        img = Image.open(file)
+        width, height = img.size
+        file_size = len(file.read())
+        file.seek(0)  # Reset file pointer
+        
+        # Obter sugestões de redimensionamento
+        suggestions = get_suggested_sizes(width, height)
+        
+        return jsonify({
+            'width': width,
+            'height': height,
+            'file_size': file_size,
+            'suggestions': suggestions
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
 
 @app.route('/process', methods=['POST'])
 def process_image():
